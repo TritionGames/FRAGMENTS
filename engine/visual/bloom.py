@@ -7,7 +7,7 @@ from engine.shader_loader import load_shader
 
 class Mip:
     def __init__(self, ctx, vbo, res, program_downscale, program_mix):
-        self.tex = ctx.texture(res, 3, dtype='f1')
+        self.tex = ctx.texture(res, 3, dtype='f2')
         
         self.tex.repeat_x, self.tex.repeat_y = False, False
         self.fbo = ctx.framebuffer(self.tex)
@@ -42,10 +42,20 @@ class Bloom:
         self.program_mix = ctx.program(
             vertex_shader=load_shader(path, 'vert.glsl'),
             fragment_shader=load_shader(path, 'mix.frag.glsl'))
+        
+        self.program_highlights = ctx.program(
+            vertex_shader=load_shader(path, 'vert.glsl'),
+            fragment_shader=load_shader(path, 'highlights.frag.glsl'))
+
+        self.highlights_vao = ctx.vertex_array(self.program_highlights, [(self.vbo, '2f 2f', 'vert', 'texcoord')])
+        self.highlights_tex = ctx.texture(resolution, 3, dtype='f2')
+        self.highlights_fbo = ctx.framebuffer(self.highlights_tex)
 
         self.resolution = resolution
         self.levels = levels
         self.mips = []
+
+        self.amplifier = 4
 
         self.generate_mips()
 
@@ -56,27 +66,4 @@ class Bloom:
         self.mips = []
 
         for i in range(self.levels):
-            self.mips.append(Mip(self.ctx, self.vbo, (int(self.resolution[0] / ((i*5+1))), int(self.resolution[1] / ((i*5+1)))), self.program_downscale, self.program_mix))
-
-    def bloom(self, tex):
-        self.mips[0].fbo.clear(0, 0, 0)
-        self.mips[0].tex.write(tex.read())
-
-        for level in range(self.levels):
-            
-            if not level == self.levels - 1:
-                self.mips[level].fbo.color_attachments[0].use()
-                self.mips[level+1].fbo.use()
-                self.mips[level+1].vao.render(mgl.TRIANGLE_STRIP)
-
-        self.program_mix['tex2'] = 1
-
-        for level in range(self.levels):
-            level = (self.levels - 1) - level
-
-            if level > 0:
-                self.mips[level - 1].fbo.use()
-                self.mips[level - 1].fbo.color_attachments[0].use(1)
-                self.mips[level].fbo.color_attachments[0].use(0)
-
-                self.mips[level].mix_vao.render(mgl.TRIANGLE_STRIP)
+            self.mips.append(Mip(self.ctx, self.vbo, (int(self.resolution[0] / ((i * self.amplifier +1))), int(self.resolution[1] / ((i * self.amplifier+1)))), self.program_downscale, self.program_mix))

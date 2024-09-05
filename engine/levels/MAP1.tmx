@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="50" tileheight="50" infinite="0" nextlayerid="3" nextobjectid="29">
- <tileset firstgid="1" source="stuff.tsx"/>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="left-down" width="100" height="100" tilewidth="50" tileheight="50" infinite="0" nextlayerid="3" nextobjectid="77">
+ <tileset firstgid="1" name="OBJECTS" tilewidth="640" tileheight="500" tilecount="30" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image source="../../assets/images/phone.png" width="50" height="50"/>
+  </tile>
+  <tile id="1">
+   <image source="../../assets/images/player.png" width="30" height="30"/>
+  </tile>
+  <tile id="2">
+   <image source="../../assets/images/poisonwater.png" width="50" height="50"/>
+  </tile>
+  <tile id="3">
+   <image source="../../assets/images/poisonwaterexposed.png" width="50" height="50"/>
+  </tile>
+  <tile id="4">
+   <image source="../../assets/images/red_flare.png" width="32" height="32"/>
+  </tile>
+  <tile id="5">
+   <image source="../../assets/images/splash1.png" width="30" height="30"/>
+  </tile>
+  <tile id="6">
+   <image source="../../assets/images/splash2.png" width="30" height="30"/>
+  </tile>
+  <tile id="7">
+   <image source="../../assets/images/splash3.png" width="30" height="30"/>
+  </tile>
+  <tile id="8">
+   <image source="../../assets/images/splash4.png" width="30" height="30"/>
+  </tile>
+  <tile id="9">
+   <image source="../../assets/images/splash5.png" width="30" height="30"/>
+  </tile>
+  <tile id="10">
+   <image source="../../assets/images/spritesheet.png" width="500" height="500"/>
+  </tile>
+  <tile id="11">
+   <image source="../../assets/images/test.png" width="100" height="100"/>
+  </tile>
+  <tile id="12">
+   <image source="../../assets/images/turretbase.png" width="50" height="50"/>
+  </tile>
+  <tile id="13">
+   <image source="../../assets/images/turrethead.png" width="30" height="16"/>
+  </tile>
+  <tile id="14">
+   <image source="../../assets/images/wall.png" width="50" height="50"/>
+  </tile>
+  <tile id="15">
+   <image source="../../assets/images/wires1.png" width="50" height="500"/>
+  </tile>
+  <tile id="16">
+   <image source="../../assets/images/background.png" width="640" height="360"/>
+  </tile>
+  <tile id="17">
+   <image source="../../assets/images/bars.png" width="50" height="50"/>
+  </tile>
+  <tile id="18">
+   <image source="../../assets/images/button100x50.png" width="100" height="50"/>
+  </tile>
+  <tile id="19">
+   <image source="../../assets/images/crate.png" width="50" height="50"/>
+  </tile>
+  <tile id="20">
+   <image source="../../assets/images/cratesmall.png" width="30" height="30"/>
+  </tile>
+  <tile id="21">
+   <image source="../../assets/images/cup1.png" width="20" height="20"/>
+  </tile>
+  <tile id="22">
+   <image source="../../assets/images/dirt1.png" width="100" height="50"/>
+  </tile>
+  <tile id="23">
+   <image source="../../assets/images/door.png" width="50" height="50"/>
+  </tile>
+  <tile id="24">
+   <image source="../../assets/images/exit.png" width="30" height="20"/>
+  </tile>
+  <tile id="25">
+   <image source="../../assets/images/fan.png" width="100" height="100"/>
+  </tile>
+  <tile id="26">
+   <image source="../../assets/images/grass.png" width="100" height="100"/>
+  </tile>
+  <tile id="27">
+   <image source="../../assets/images/image.png" width="412" height="341"/>
+  </tile>
+  <tile id="28">
+   <image source="../../assets/images/lightbulb.png" width="50" height="50"/>
+  </tile>
+  <tile id="29">
+   <image source="../../assets/images/outline.png" width="100" height="100"/>
+  </tile>
+ </tileset>
  <layer id="1" name="Tile Layer 1" width="100" height="100">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -105,7 +197,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="2" name="Objects">
+ <objectgroup id="2" name="Objects" offsetx="13" offsety="11">
   <object id="1" name="phone" gid="1" x="150" y="500" width="50" height="50"/>
   <object id="2" name="phone" gid="1" x="300" y="500" width="50" height="50"/>
   <object id="3" name="crate" gid="20" x="200" y="500" width="50" height="50"/>
@@ -115,24 +207,17 @@
   <object id="7" name="cup1" gid="22" x="260.5" y="449.5" width="20" height="20"/>
   <object id="8" name="cup1" gid="22" x="253.5" y="406" width="20" height="20"/>
   <object id="9" name="cup1" gid="22" x="262.5" y="358" width="20" height="20"/>
-  <object id="10" name="cup1" gid="22" x="256.5" y="305.5" width="20" height="20"/>
-  <object id="11" name="cup1" gid="22" x="249" y="249" width="20" height="20"/>
-  <object id="12" name="crate" gid="20" x="150" y="300" width="300" height="50"/>
+  <object id="10" name="cup1" gid="22" x="210.5" y="358.167" width="20" height="20"/>
+  <object id="11" name="cup1" gid="22" x="237" y="232.333" width="20" height="20"/>
+  <object id="12" name="crate" gid="20" x="82" y="300" width="102" height="177.333"/>
   <object id="13" name="wall" gid="15" x="100" y="500" width="50" height="50"/>
   <object id="14" name="wall" gid="15" x="150" y="550" width="50" height="50"/>
   <object id="15" name="wall" gid="15" x="200" y="550" width="50" height="50"/>
   <object id="16" name="wall" gid="15" x="250" y="550" width="50" height="50"/>
   <object id="17" name="wall" gid="15" x="300" y="550" width="50" height="50"/>
-  <object id="18" name="wall" gid="15" x="350" y="500" width="50" height="50"/>
   <object id="19" name="crate" gid="20" x="100" y="450" width="50" height="50"/>
   <object id="20" name="crate" gid="20" x="100" y="400" width="50" height="50"/>
-  <object id="21" name="crate" gid="20" x="350" y="450" width="50" height="50"/>
-  <object id="22" name="crate" gid="20" x="350" y="400" width="50" height="50"/>
-  <object id="23" name="crate" gid="20" x="350" y="350" width="50" height="50"/>
   <object id="24" name="crate" gid="20" x="100" y="350" width="50" height="50"/>
-  <object id="25" name="crate" gid="20" x="150" y="200" width="50" height="50"/>
-  <object id="26" name="crate" gid="20" x="150" y="150" width="50" height="50"/>
-  <object id="27" name="crate" gid="20" x="300" y="150" width="50" height="50"/>
-  <object id="28" name="crate" gid="20" x="350" y="150" width="50" height="50"/>
+  <object id="76" name="lightbulb" gid="29" x="350" y="500" width="50" height="50"/>
  </objectgroup>
 </map>
