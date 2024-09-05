@@ -1,30 +1,25 @@
 import os
 import math
+
 import time
 from array import array
 
 import pygame as pg
-import random
 import pymunk as pm
-from copy import deepcopy
 
-from engine.renderer import Render, create_buffer_rect, create_render_object, relative_coord, rotate_buffer, create_buffer_line
+from engine.renderer import Render, create_buffer_rect, create_render_object, create_buffer_line
 from engine.functions import *
-from engine.image_loader import load_image, images
-from engine.spritesheet_manager import get_tile_at_index
+from engine.image_loader import images
 from engine.physics import create_body
 from engine.song_manager import *
-from engine.visual.vfx import Splash
 
 class Block:
-    def __init__(self, x, y, w, h):
+    def __init__(self, x, y, w, h, surface = None):
         self.rect = pg.FRect(x, y, w, h)
         self.resolution = (0, 0)
-        self.image_id = 0
         self.rotate = 0
         self.block_type = 0
         self.static = True
-        self.image_name = None
         self.physics = False
         self.physics_type = pm.Body.STATIC
         self.physics_body = [None, None]
@@ -32,7 +27,7 @@ class Block:
         self.mass = 100
         self.friction = 1
         self.collision = True
-        self.light = [self.rect.center, 0, (255, 255, 255)]
+        self.light = None
         self.collision_type = 2
         self.physics_hitbox = None
         self.create_physics_body_in_init = True        
@@ -40,14 +35,23 @@ class Block:
         self.fluid = False
         self.should_float = 0
         self.z = 1
+        self.surface = surface
+        self.instanced = False
 
     def default_update(self, game):
+        if self.physics and not self.static:
+            old_rect = (self.rect.copy(), self.rotate)
+            self.set_rect_physics_pos()
+            if old_rect != (self.rect, self.rotate):
+                self.render_obj.vbo.release()
+                self.render_obj.vao.release()
+                self.render_obj.vbo = create_buffer_rect(self.rect, self.resolution, self.render_obj.ctx, math.degrees(self.physics_body[0].angle))
+                self.render_obj.create_vao() 
 
+            del old_rect
+        
         self.update(game)
 
-    def load_image(self, name):
-        return get_tile_at_index(self.image_id, images['spritesheet'], y_level = self.spritesheet_level) if not name else images[name]
-    
     def set_rect_physics_pos(self):
         if self.physics_body[0]:
             self.rect.x = self.physics_body[0].position.x + -1/2*self.physics_hitbox[0] + 25
@@ -78,7 +82,7 @@ class Block:
         if self.physics and self.create_physics_body_in_init:
             self.create_body(space, set_physics_pos)
 
-        self.render_obj = self.create_renderer(ctx, program, self.image_name, self.rect, self.rotate if not (self.physics and self.create_physics_body_in_init) else self.physics_body[0].angle)
+        self.render_obj = self.create_renderer(ctx, program, self.rect, self.rotate if not (self.physics and self.create_physics_body_in_init) else self.physics_body[0].angle)
 
         self.programs = programs
 
@@ -97,16 +101,17 @@ class Block:
         self.physics_body[0].origin = self
         
         if space:
-            space.add(*self.physics_body)
+            space.add(*self.physics_body) 
 
         if set_physics_pos:
             self.set_rect_physics_pos()
 
-    def create_renderer(self, ctx, program, image, rect, rotate = 0):
+    def create_renderer(self, ctx, program, rect, rotate = 0):
         render = Render()
         render.ctx = ctx
         render.program = program
-        render.texture = surface_to_texture(self.load_image(image), ctx, swizzle='RGBA' if image else 'BGRA')
+        if self.surface:
+            render.texture = surface_to_texture(self.surface.convert_alpha(), ctx, swizzle='BGRA')
         render.vbo = create_buffer_rect(rect, self.resolution, ctx, rotate if not self.physics else math.degrees(rotate))
         render.create_vao()
 
@@ -130,8 +135,8 @@ class Block:
         self.render_obj.render()
 
 class Metal(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, surface)
         self.block_type = 0
         self.static = True
         self.physics = True
@@ -139,8 +144,8 @@ class Metal(Block):
         self.friction = 0.85
 
 class PoisonWater(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, surface)
         self.spritesheet_level = 2
         self.static = False
         self.physics = True
@@ -168,12 +173,12 @@ class PoisonWater(Block):
             self.programs[2]['offset'] = (0, 0)
 
 class Fan(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['fan'])
         self.block_type = -1
         self.static = False
         
-        self.image_name = 'fan'
+        'fan'
         self.physics = False
         self.collision = False
 
@@ -186,60 +191,60 @@ class Fan(Block):
         self.render_obj.create_vao()
 
 class Grass(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['grass'])
         self.block_type = -1
         self.static = False
-        self.image_name = 'grass'
+        'grass'
         
         self.physics = False
         self.collision = False
 
 class Dirt(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['dirt1'])
         self.block_type = -1
         self.static = False
-        self.image_name = 'dirt1'
+        'dirt1'
         self.collision = False
         self.physics = False
 
 class Bars(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['bars'])
         self.block_type = -1
         self.static = False
         self.collision = False
-        self.image_name = 'bars'
+        'bars'
 
         self.physics = False
 
 class Wires1(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['wires'])
         self.block_type = -1
         self.static = False
         self.collision = False
-        self.image_name = 'wires1'
+        'wires1'
         self.physics = False
         self.z = 1.5
 
 class Pipes(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, surface)
         self.static = False
         self.collision = False
         self.spritesheet_level = 1
         self.physics = False
 
 class Cup(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['cup1'])
         self.block_type = -1
         self.static = False
         self.physics_type = pm.Body.DYNAMIC
         self.physics = True
-        self.image_name = 'cup1'
+        'cup1'
         self.mass = 20
         self.collision = False
         self.friction = 0.94
@@ -254,51 +259,40 @@ class Cup(Block):
         self.render_obj.create_vao() 
 
 class Light1(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['lightbulb'])
         self.block_type = -1
         self.static = False
         self.physics_type = pm.Body.DYNAMIC
         self.physics = False
-        self.image_name = 'lightbulb'
+        'lightbulb'
 
         self.mass = 10
         self.collision = False
         self.friction = 1
-        self.light = [self.rect.center, 0.25, (1, 1, 1)]
+        self.light = [self.rect.center, (3, 3, 3)]
 
 class Crate(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['crate'])
         self.block_type = -1
         self.static = False
         self.physics_type = pm.Body.DYNAMIC
         self.physics = True
-        self.image_name = 'crate'
-
+        'crate'
         self.mass = 70
         self.collision = False
         self.friction = 0.7
         self.collision_type = 2
 
-    def update(self, game):
-        #print(self.physics_body[0].position, type(self))
-
-        self.set_rect_physics_pos()
-
-        self.render_obj.vbo.release()
-        self.render_obj.vao.release()
-        self.render_obj.vbo = create_buffer_rect(self.rect, self.resolution, self.render_obj.ctx, math.degrees(self.physics_body[0].angle))
-        self.render_obj.create_vao() 
-
 class CrateSmall(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['crate'])
         self.block_type = -1
         self.static = False
         self.physics_type = pm.Body.DYNAMIC
         self.physics = True
-        self.image_name = 'crate'
+        'crate'
         self.mass = 45
         self.collision = False
         self.friction = 0.7
@@ -315,13 +309,13 @@ class CrateSmall(Block):
         self.render_obj.create_vao() 
 
 class Turret(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['turretbase'])
         self.block_type = -1
         self.static = False
         self.physics_type = pm.Body.DYNAMIC
         self.physics = True
-        self.image_name = 'turretbase'
+        'turretbase'
 
         self.mass = 30
         self.collision = False
@@ -462,11 +456,20 @@ class Turret(Block):
         self.render_obj_head.render()
 
 class Phone(Block):
-    def __init__(self, x, y, w, h):
-        super().__init__(x, y, w, h)
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, images['phone'])
         self.block_type = -1
         self.static = False
         self.collision = False
-        self.image_name = 'phone'
+        'phone'
 
         self.physics = False
+
+class Image(Block):
+    def __init__(self, x, y, w, h, surface = None):
+        super().__init__(x, y, w, h, surface)
+        self.block_type = -1
+        self.static = False
+        self.collision = False
+        self.physics = False
+        self.surface = surface

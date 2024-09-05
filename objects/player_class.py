@@ -69,10 +69,6 @@ class Player:
         if space:
             space.add(*self.physics_body)        
 
-        self.collision_handler = space.add_collision_handler(2, 1)
-        self.collision_handler.begin = self.is_touching_ground
-        self.collision_handler.separate = self.left_touching_ground
-
         self.touching_count = 0
 
         self.programs = programs
@@ -82,14 +78,6 @@ class Player:
 
     def remove(self):
         del self
-
-    def is_touching_ground(self, arbiter, space, data):
-        self.on_body = arbiter.shapes[0].body
-
-        return True
-    
-    def left_touching_ground(self, arbiter, space, data):
-        return True
 
     def jump(self):
         if (self.coyote_time < 0.1 or self.touching_count > 0):
@@ -137,21 +125,18 @@ class Player:
 
         self.touching_ground = self.physics_body[0].space.segment_query_first([bb.left + 2, bb.bottom], [bb.right - 2, bb.bottom], 1, pm.ShapeFilter(mask=pm.ShapeFilter.ALL_MASKS() ^ 0b111))
 
+        if self.pinJoint:
+            self.pinJoint.anchor_a
+
         if self.touching_ground:
             self.coyote_time = 0
-
-        if self.line_render:
-            self.line_render.clear()
-
+            self.on_body = self.touching_ground.shape.body
 
         if self.seg_q:  
             point_raw = [*self.seg_q.point]
 
             point = self.rect_pos_to_physics(point_raw, (0, 0))
 
-            self.line_render = create_render_object(self.render_obj.ctx, self.programs[5], create_buffer_line(self.rect.center, point, self.resolution, self.render_obj.ctx), create_vao=False)
-            self.line_render.create_vao(['2f', 'vert'])
-            self.line_render.mode = mgl.LINES
 
             if pg.mouse.get_just_pressed()[0]:
                 self.seg_q.shape.body.apply_force_at_world_point((math.cos(direction) * 5000000, -math.sin(direction) * 5000000), self.seg_q.shape.body.position)
@@ -175,7 +160,3 @@ class Player:
         self.render_obj.program['position'] = relative_coord(self.rect.topleft, self.resolution, self.render_obj.ctx)
         self.render_obj.render()
         self.render_obj.program['position'] = (0, 0)
-        if self.line_render:
-            self.programs[5]['color'] = (0, 1, 0, 1)
-            self.line_render.render()
-            self.programs[5]['color'] = (1, 0, 0, 0.8)
