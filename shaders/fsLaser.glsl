@@ -3,7 +3,7 @@
 in vec4 coord;
 out vec4 f_color;
 
-uniform vec4 color = vec4(1, 0, 0, 0.4);
+uniform vec4 color = vec4(1, 1, 1, 1);
 uniform float time = 0;
 
 float rand(vec2 co){
@@ -12,5 +12,5 @@ float rand(vec2 co){
 
 void main()
 {
-    f_color = color * max(rand(coord.xy + time) - 0.5, 0) * 2;
+    f_color = color/2 + time/1000000;
 }

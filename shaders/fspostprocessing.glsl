@@ -1,21 +1,60 @@
 #version 330 
 
 uniform sampler2D tex;
+uniform sampler2D tex2;
 
 in vec2 uvs;
 out vec4 f_color;
 
-vec3 aces(vec3 x) {
-  const float a = 2.51;
-  const float b = 0.03;
-  const float c = 2.43;
-  const float d = 0.59;
-  const float e = 0.14;
-  return clamp((x * (a * x + b)) / (x * (c * x + d) + e), 0.0, 1.0);
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
+vec3 uncharted2Tonemap(vec3 x) {
+  float A = 0.15;
+  float B = 0.50;
+  float C = 0.10;
+  float D = 0.20;
+  float E = 0.02;
+  float F = 0.30;
+  float W = 11.2;
+  return ((x * (A * x + C * B) + D * E) / (x * (A * x + B) + D * F)) - E / F;
+}
+
+vec3 uncharted2(vec3 color) {
+  const float W = 11.2;
+  float exposureBias = 2.0;
+  vec3 curr = uncharted2Tonemap(exposureBias * color);
+  vec3 whiteScale = 1.0 / uncharted2Tonemap(vec3(W));
+  return curr * whiteScale;
 }
 
 uniform float time;
 uniform float white;
+
+uniform vec2 res = vec2(1920, 1080);
+
+vec3 chromatic_abberation(in sampler2D tex, in vec2 uv){
+    float amount;
+
+
+    vec2 texSize = textureSize(tex, 0);
+    vec2 invTexSize = 1.0 / texSize;
+
+	amount = pow(amount, 3.0);
+
+	amount *= 5;
+	
+    vec3 col;
+    col.r = texture(tex, vec2(uv.x+amount * invTexSize.x,uv.y) ).r;
+    col.g = texture(tex, uv).g;
+    col.b = texture(tex, vec2(uv.x-amount * invTexSize.y,uv.y) ).b;
+
+	col *= (1.0 - amount * 0.5);
+
+    return col;
+}
+
 
 vec3 hueShift( vec3 color, float hueAdjust ){
 
@@ -52,8 +91,8 @@ vec3 hsl2rgb(vec3 c) {
 }
 
 vec3 posterize(in vec3 inputColor){
-  float gamma = 0.3f;
-  float numColors = 16.0f;
+  float gamma = 1.3f;
+  float numColors = 4.0f;
 
   vec3 c = inputColor.rgb;
   c = pow(c, vec3(gamma, gamma, gamma));
@@ -122,9 +161,27 @@ vec3 filmGrain(vec3 rgb, vec2 uv, float time){
 
 uniform float exposure = 1;
 uniform int samples = 10;
+uniform float intensity = 1;
 
-float warp = 0; // simulate curvature of CRT monitor
-float scan = 0; // simulate darkness between scanlines
+vec3 czm_saturation(vec3 rgb, float adjustment)
+{
+    // Algorithm from Chapter 16 of OpenGL Shading Language
+    const vec3 W = vec3(0.2125, 0.7154, 0.0721);
+    vec3 intensity = vec3(dot(rgb, W));
+    return mix(intensity, rgb, adjustment);
+}
+
+float Bayer2(vec2 a) {
+    a = floor(a);
+    return fract(a.x / 2. + a.y * a.y * .75);
+}
+
+#define Bayer4(a)   (Bayer2 (.5 *(a)) * .25 + Bayer2(a))
+#define Bayer8(a)   (Bayer4 (.5 *(a)) * .25 + Bayer2(a))
+#define Bayer16(a)  (Bayer8 (.5 *(a)) * .25 + Bayer2(a))
+#define Bayer32(a)  (Bayer16(.5 *(a)) * .25 + Bayer2(a))
+#define Bayer64(a)  (Bayer32(.5 *(a)) * .25 + Bayer2(a))
+
 
 void main()
 {
@@ -134,34 +191,29 @@ void main()
 
     vec3 color;
 
-    // squared distance from center
-
-    vec2 dc = abs(0.5-coords);
-    dc *= dc;
-    
-    // warp the fragment coordinates
-    coords.x -= 0.5; coords.x *= 1.0+(dc.y*(0.3*warp)); coords.x += 0.5;
-    coords.y -= 0.5; coords.y *= 1.0+(dc.x*(0.4*warp)); coords.y += 0.5;
-
     if (coords.y > 1.0 || coords.x < 0.0 || coords.x > 1.0 || coords.y < 0.0){
       discard;
     }
 
     color = texture(tex, coords).rgb;
 
-    //color = posterize(color);
-    
+    vec4 bloom = texture(tex2, coords);
+
+    color += bloom.rgb * 0.1;
+
     //vec3 colorBlur = textureBicubic(texBlur, coords).rgb;
 
     //float brightness = (0.2126*colorBlur.r + 0.7152*colorBlur.g + 0.0722*colorBlur.b);
     
-    color *= exposure;
+    color *= intensity;
     
     //color += mix(color,vec3(0.0),abs(sin((coords.y)*720)*0.5*scan));
 
-    color = aces(color);
+    color = uncharted2(color);
 
-    //color = posterize(color);
+    color = czm_saturation(color, 1.2);
 
-    f_color = vec4(color + white, 1);
+    color.rgb = filmGrain(color.rgb, vec2(uvs.x, 1 - uvs.y), time);
+
+    f_color = vec4(color, 1);
 } 
