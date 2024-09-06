@@ -1,43 +1,141 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="50" tileheight="50" infinite="0" nextlayerid="3" nextobjectid="13">
- <tileset firstgid="1" source="spritesheet.tsx"/>
- <tileset firstgid="101" source="objects.tsx"/>
- <layer id="1" name="Tileset" width="30" height="20">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="50" tileheight="50" infinite="0" nextlayerid="3" nextobjectid="25">
+ <tileset firstgid="1" source="../../../../FRAGMENTS/FRAGMENTS/engine/levels/spritesheet.tsx"/>
+ <tileset firstgid="101" source="../../../../FRAGMENTS/FRAGMENTS/engine/levels/stuff.tsx"/>
+ <layer id="1" name="Tileset" width="30" height="30">
   <data encoding="csv">
-5,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,5,0,5,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,5,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,1610612737,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-5,1,1610612742,0,0,3221225478,1,1,1,1,5,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-0,0,2684354561,0,0,1610612737,0,0,0,0,0,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-0,0,2684354561,0,0,1610612737,0,0,0,0,0,0,2684354561,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-5,3221225473,5,0,0,5,3221225473,3221225473,3221225473,3221225473,3221225473,3221225473,5,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-2684354561,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1610612737,0,0,0,0,0,
-5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5,0,0,0,0,0,
+5,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,3221225475,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,1610612739,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,1610612739,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,1610612739,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,1610612739,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,1610612739,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,5,3,3,3,3,3,5,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2684354563,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2684354563,0,0,0,0,0,0,0,0,0,0,0,
+2684354563,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2684354563,0,0,0,0,0,0,0,0,0,0,0,
+5,3,3,3,3,3,3,3,3,3,3,3,5,3,3,3,3,3,5,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup id="2" name="Objects">
-  <object id="1" type="Crate" gid="132" x="900" y="800" width="50" height="50"/>
-  <object id="2" type="Crate" gid="132" x="1150" y="800" width="50" height="50"/>
-  <object id="3" type="Crate" gid="132" x="1050" y="800" width="50" height="50"/>
-  <object id="4" type="Crate" gid="132" x="1100" y="800" width="50" height="50"/>
-  <object id="5" type="Crate" gid="132" x="1150" y="750" width="50" height="50"/>
-  <object id="6" type="Crate" gid="132" x="1150" y="700" width="50" height="50"/>
-  <object id="7" type="Crate" gid="132" x="1100" y="750" width="50" height="50"/>
-  <object id="8" type="Crate" gid="132" x="1150" y="650" width="50" height="50"/>
-  <object id="9" type="Light1" gid="141" x="400" y="700" width="50" height="50"/>
-  <object id="10" type="Light1" gid="141" x="250" y="100" width="50" height="50"/>
-  <object id="11" type="Light1" gid="141" x="800" y="100" width="50" height="50"/>
-  <object id="12" type="Light1" gid="141" x="1050" y="100" width="50" height="50"/>
+  <object id="1" type="Crate" gid="120" x="150" y="500" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="2" type="Crate" gid="120" x="200" y="500" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="3" type="Crate" gid="120" x="300" y="500" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="4" type="Light1" gid="129" x="150" y="100" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="5" type="Light1" gid="129" x="400" y="100" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="6" type="Light1" gid="129" x="750" y="400" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="7" type="Wires1" gid="116" x="100" y="500" width="50" height="500">
+   <properties>
+    <property name="z" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="8" type="Wires1" gid="116" x="318.667" y="588" width="50" height="500">
+   <properties>
+    <property name="z" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="9" type="Wires1" gid="116" x="553.667" y="527.333" width="50" height="500">
+   <properties>
+    <property name="z" type="float" value="1"/>
+   </properties>
+  </object>
+  <object id="10" type="Cup" gid="122" x="62.5" y="480.5" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="11" type="Cup" gid="122" x="94" y="452.5" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="12" type="Cup" gid="122" x="163.5" y="427" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="13" type="Cup" gid="122" x="246" y="427" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="14" type="Cup" gid="122" x="277.333" y="470.833" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="15" type="Cup" gid="122" x="322" y="436" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="16" type="Cup" gid="122" x="362" y="469.5" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="17" type="Cup" gid="122" x="799.5" y="500.5" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="18" type="Cup" gid="122" x="854" y="466" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="19" type="Cup" gid="122" x="862.5" y="411.5" width="20" height="20">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
+  <object id="21" type="Phone" gid="101" x="700" y="450" width="50" height="50">
+   <properties>
+    <property name="z" type="float" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

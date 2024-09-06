@@ -17,4 +17,4 @@ def create_body(pos, size, type, mass = None, friction = None, collision_type = 
     if moment:
         body.moment = moment
 
-    return body, shape
+    return [body, shape]
