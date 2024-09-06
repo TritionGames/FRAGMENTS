@@ -1,5 +1,6 @@
 import os
 import math
+import pickle
 
 import time
 from array import array
@@ -37,6 +38,8 @@ class Block:
         self.z = 1
         self.surface = surface
         self.instanced = False
+        self.brightness = 1
+        self.shininess = 1
 
     def default_update(self, game):
         if self.physics and not self.static:
@@ -98,7 +101,7 @@ class Block:
 
         self.physics_body = create_body((rect.x, -rect.y), self.physics_hitbox, self.physics_type, self.mass, self.friction, self.collision_type)
         self.physics_body[0].angle = math.radians(self.rotate)
-        self.physics_body[0].origin = self
+        #self.physics_body[0].origin = self
         
         if space:
             space.add(*self.physics_body) 
@@ -123,15 +126,22 @@ class Block:
     def add(self, objects):
         objects.append(self)
 
-    def remove(self):
+    def clear(self):
+        if self.physics:
+            self.physics_body[0].origin = None
+
         self.render_obj.clear()
-        del self
+        self.ctx = None
+        self.programs = []
+        self.surface = None
 
     def update(self, game):
         pass
 
     def render(self):
         self.render_obj.vao.program['z'] = self.z
+        self.render_obj.vao.program['exposure'] = self.brightness
+        self.render_obj.vao.program['shininess'] = self.shininess
         self.render_obj.render()
 
 class Metal(Block):
@@ -221,7 +231,7 @@ class Bars(Block):
 
 class Wires1(Block):
     def __init__(self, x, y, w, h, surface = None):
-        super().__init__(x, y, w, h, images['wires'])
+        super().__init__(x, y, w, h, images['wires1'])
         self.block_type = -1
         self.static = False
         self.collision = False

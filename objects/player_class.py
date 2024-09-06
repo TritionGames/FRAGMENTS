@@ -32,6 +32,8 @@ class Player:
         self.grab_pos = (0, 0)
         self.grab_distance = 75
         self.arbiter = None
+        self.damp = 1
+        self.physics = True
 
     def set_rect_physics_pos(self):
         if self.physics_body[0]:
@@ -64,7 +66,7 @@ class Player:
 
         self.physics_body = create_body((self.rect.x, -self.rect.y), (self.rect.w, self.rect.h), self.physics_type, 25, 0.5, 1, float('inf'), elasticity=0.6)
         self.physics_body[0].moment = float('inf')
-        self.physics_body[0].origin = self
+        #self.physics_body[0].origin = self
 
         if space:
             space.add(*self.physics_body)        
@@ -88,12 +90,12 @@ class Player:
             self.coyote_time = 100
         #    self.coyote_time = 100
 
-    def zero_gravity(self, body, gravity, damping, dt):
-        pm.Body.update_velocity(body, (0,0), damping, dt)
+    def damp_velocity(self, body, gravity, damping, dt):
+        mod_damp = 0.90 * damping
+        pm.Body.update_velocity(body, gravity, mod_damp, dt)
 
     def default_velocity(self, body, gravity, damping, dt):
-        mod_damp = body.custom_damping * damping
-        pm.Body.update_velocity(body, gravity, mod_damp, dt)
+        pm.Body.update_velocity(body, gravity, damping, dt)
 
     def update(self, game):
 
@@ -125,6 +127,23 @@ class Player:
 
         self.touching_ground = self.physics_body[0].space.segment_query_first([bb.left + 2, bb.bottom], [bb.right - 2, bb.bottom], 1, pm.ShapeFilter(mask=pm.ShapeFilter.ALL_MASKS() ^ 0b111))
 
+        if self.grabbed_body:
+            dist_mouse = max(min(math.hypot(game.mouse_pos[1] - game.resolution[1]/2, game.mouse_pos[0] - game.resolution[0]/2), 75), 40)
+
+            to_move = math.cos(direction) * dist_mouse + start[0], -math.sin(direction) * dist_mouse + start[1]
+
+            grabbed_body_pos = list(self.grabbed_body[1].bb.center())
+
+            distance = max(300/dist_mouse - 0.2, 0)#max((200/dist_mouse - 0.1), 0)
+
+            angle = math.atan2(grabbed_body_pos[1] - to_move[1], grabbed_body_pos[0] - to_move[0])
+
+            #self.damp = 1/(distance * 1.5)
+
+            dx, dy = math.cos(angle), math.sin(angle)
+
+            self.grabbed_body[0].apply_force_at_world_point((50000 * -distance * dx, 50000 * -distance * dy), self.grabbed_body[0].position)
+
         if self.pinJoint:
             self.pinJoint.anchor_a
 
@@ -137,23 +156,20 @@ class Player:
 
             point = self.rect_pos_to_physics(point_raw, (0, 0))
 
-
             if pg.mouse.get_just_pressed()[0]:
-                self.seg_q.shape.body.apply_force_at_world_point((math.cos(direction) * 5000000, -math.sin(direction) * 5000000), self.seg_q.shape.body.position)
+                self.seg_q.shape.body.apply_force_at_world_point((math.cos(direction) * 30000000, -math.sin(direction) * 30000000), self.seg_q.shape.body.position)
 
             if pg.mouse.get_just_pressed()[2]:
-                if not self.grabbed_body and not self.pinJoint and self.seg_q.shape.body.body_type == pm.Body.DYNAMIC:
-                    self.grabbed_body = self.seg_q.shape.body
-                    self.pinJoint = pm.PinJoint(self.grabbed_body, self.physics_body[0])
-                    game.space.add(self.pinJoint)
+                if not self.grabbed_body and not self.pinJoint and self.seg_q.shape.body.body_type == pm.Body.DYNAMIC and self.seg_q.shape.body.mass < 50:
+                    self.grabbed_body = [self.seg_q.shape.body, self.seg_q.shape]
+                    #self.grabbed_body[0].velocity_func = self.damp_velocity
 
-        if not pg.mouse.get_pressed()[2]:
-            if self.pinJoint:
+            if not pg.mouse.get_pressed()[2] and self.grabbed_body:
                 self.release_grabbed_object()
 
     def release_grabbed_object(self):
-        self.grabbed_body.space.remove(self.pinJoint)
-        self.pinJoint = None
+        #self.grabbed_body[0].velocity_func = self.default_velocity
+        self.grabbed_body[0].velocity = [0, 0]
         self.grabbed_body = None
 
     def render(self):
